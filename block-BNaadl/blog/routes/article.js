@@ -15,7 +15,8 @@ router.get("/new", (req, res,) => {
 });
 
 router.post("/", (req, res, next) => {
-  Article.create(req.body, (err, createArticle) => {
+  req.body.tags = req.body.tags.trim().split(" ");
+  Article.create(req.body, (err, createdArticle) => {
     if(err) return next(err);
     res.redirect('/articles');
   });
@@ -32,6 +33,7 @@ router.get('/:id', (req, res, next) => {
 router.get("/:id/edit", (req, res, next) => {
   let id = req.params.id;
   Article.findById(id, (err, article) => {
+    article.tags = article.tags.join(" ");
     if(err) return next(err);
     res.render('editarticleForm', {article: article});
   })
@@ -39,9 +41,10 @@ router.get("/:id/edit", (req, res, next) => {
 
 router.post("/:id", (req, res, next) => {
   let id = req.params.id;
+  req.body.tags = req.body.tags.split(" ");
   Article.findByIdAndUpdate(id, req.body, (err, updatedArticle) => {
       if(err) return next(err);
-      res.redirect('/articles/' + id);
+      res.redirect('/articleDetails/' + id);
   })
 })
 
@@ -50,6 +53,22 @@ router.get("/:id/delete", (req, res, next) => {
   Article.findByIdAndDelete(id, (err, article) => {
       if(err) return next(err);
       res.redirect("/articles");
+  })
+})
+
+router.get("/:id/likes", (req, res, next) => {
+  let id = req.params.id;
+  Article.findByIdAndUpdate(id, {$inc: {likes: 1}}, (err, article) => {
+    if(err) return next(err);
+    res.redirect("/articles/" + id)
+  })
+})
+
+router.get("/:id/dislikes", (req, res, next) => {
+  let id = req.params.id;
+  Article.findByIdAndUpdate(id, {$inc: {likes: -1}}, (err, article) => {
+    if(err) return next(err);
+    res.redirect("/articles/" + id)
   })
 })
 
