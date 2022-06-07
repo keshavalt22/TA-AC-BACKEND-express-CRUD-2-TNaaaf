@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Article Deatils</title>
+    <title>Article</title>
     <link rel="stylesheet" href="/stylesheet/style.css">
 </head>
 <body>
@@ -25,15 +25,27 @@
                 <h2><%= article.title%></h2>
                 <h3><%= article.author %></h3>
                 <p><%= article.description %></p>
-                <p>Tags: <%= article.tags %></p>
-                <h4>Likes: <%= article.likes %></h4>
-                <a href="/articles/<%= article._id%>/edit">
-                    <button class="btn-blue">Edit</button>
-                </a>
-                <a href="/articles/<%= article._id%>/delete">
-                    <button class="btn-red">Delete</button>
-                </a>
-            </div>
+                <% article.tags.forEach(t => { %>
+                    <span><%= t %></span>
+                <% }) %>
+                <h4>Likes: <%= article.likes ? article.likes : 0 %></h4>
+                <div>
+                    <a href="/articles/<%= article._id%>/likes">
+                        <button class="btn-green">Like</button>
+                    </a>
+                    <a href="/articles/<%= article._id%>/dislikes">
+                        <button class="btn-green">Dislike</button>
+                    </a>
+                </div>
+                <div>
+                    <a href="/articles/<%= article._id%>/edit">
+                        <button class="btn-blue">Edit</button>
+                    </a>
+                    <a href="/articles/<%= article._id%>/delete">
+                        <button class="btn-red">Delete</button>
+                    </a>
+                </div>
+                </div>
         </main>
     </div>
 </body>
